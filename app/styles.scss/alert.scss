@@ -1,0 +1,48 @@
+.progress {
+  width: 50%;
+  height: 12px;
+  display: inline-block;
+  border-radius: 3px;
+}
+.progress-wrap {
+  width: 50%;
+  background-color: #e0e0e0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+  .progress-bar {
+    display: block;
+    width: 0;
+    background-color: #659cef;
+
+    transition: width 500ms ease-in-out;
+  }
+}
+
+#download-complete {
+  color: green;
+  font-weight: bold;
+}
+
+/* The alert message box */
+.alert {
+    padding: 20px;
+    background-color: #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}
