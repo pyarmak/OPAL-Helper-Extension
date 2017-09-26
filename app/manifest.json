@@ -1,0 +1,58 @@
+{
+  "name": "__MSG_appName__",
+  "version": "0.4.0",
+  "manifest_version": 2,
+  "description": "__MSG_appDescription__",
+  "icons": {
+    "16": "images/icon-16.png",
+    "128": "images/icon-128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "scripts/chromereload.js",
+      "scripts/compare_versions.js",
+      "scripts/utils.js",
+      "scripts/background.js"
+    ]
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "cookies",
+    "nativeMessaging",
+    "notifications",
+    "https://opal.med.umanitoba.ca/*"
+  ],
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js; object-src 'self'",
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://opal.med.umanitoba.ca/*"
+      ],
+      "css": [
+        "styles/alert.css"
+      ],
+      "js": [
+        "scripts/options.js",
+        "scripts/utils.js",
+        "scripts/opal.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "browser_action": {
+    "default_icon": {
+      "19": "images/icon-19.png",
+      "38": "images/icon-38.png"
+    },
+    "default_title": "OPALhelper",
+    "default_popup": "popup.html"
+  }
+}

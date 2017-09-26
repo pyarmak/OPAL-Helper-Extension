@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "OPAL Helper",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "A companion extension for students using OPAL",
+    "description": "The description of the application"
+  }
+}
