@@ -74,6 +74,7 @@ chrome.runtime.onMessage.addListener((data, sender) => {
   });
 
   const handleVideoPlay = function () {
+    ga('send', 'pageview');
     ga('send', 'event', 'Videos', 'play', data.course);
     console.log('Playing a video directly...');
     if (!data.player || data.player.length === 0) {
@@ -97,6 +98,7 @@ chrome.runtime.onMessage.addListener((data, sender) => {
   };
 
   const handleVideoDownload = function () {
+    ga('send', 'pageview');
     ga('send', 'event', 'Videos', 'download', data.course);
     if (!data.dest || data.dest.length === 0) {
       console.log('OPAL Helper: No download location set. Closing tab and redirecting to options page...')
@@ -139,6 +141,7 @@ chrome.runtime.onMessage.addListener((data, sender) => {
   };
 
   const handleLecturePageVideoPlay = function () {
+    ga('send', 'pageview');
     ga('send', 'event', 'Videos', 'play', data.course);
     console.log('Playing a video from the lecture page...');
     chrome.cookies.get({url: sender.tab.url, name: 'AUTH_TOKEN'}, (cookie) => {
@@ -185,4 +188,6 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-47599004-4', 'auto');
+ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+ga('require', 'displayfeatures');
 ga('send', 'pageview');
