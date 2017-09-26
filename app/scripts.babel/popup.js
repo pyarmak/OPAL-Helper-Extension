@@ -13,9 +13,9 @@ EntryManager.prototype = {
         this._items = [];
         var self = this;
         chrome.storage.sync.get({history: []}, function (items) {
-            const history = (order === 'ASC') ? items.history : items.history.reverse();
+            let history = (order === 'ASC') ? items.history : items.history.reverse();
+            history.splice(count);
             for (let item of history) {
-              console.log(item);
                 self._items.push({
                     elm: self._addElm(item),
                     data: item
@@ -42,8 +42,11 @@ EntryManager.prototype = {
       video_link.setAttribute('title', 'Go to stream video');
       link.appendChild(video_link);
 
+      link.addEventListener('click', e => ga('send', 'event', 'Popup', 'lecture'));
+
       video.addEventListener('click', function (e) {
         e.preventDefault();
+        ga('send', 'event', 'Popup', 'video');
         chrome.tabs.create({url: item.vidLink});
       });
 
@@ -54,27 +57,28 @@ EntryManager.prototype = {
 };
 
 window.addEventListener('load', function (e) {
-    Options.load(function (options) {
-        var em = new EntryManager('entries', options.ItemCount, options.Order);
-    });
+  Options.load(function (options) {
+    var em = new EntryManager('entries', options.ItemCount, options.Order);
+  });
 
-    document.getElementsByClassName('brand-logo')[0]
-        .addEventListener('click', function (e) {
-            var button = e.button;
-            setTimeout(function () {
-                chrome.tabs.create({
-                    url: 'https://opal.med.umanitoba.ca',
-                    selected: (button != 1)
-                });
-            }, 0);
-        }, false);
+  document.getElementsByClassName('brand-logo')[0]
+    .addEventListener('click', function (e) {
+      var button = e.button;
+      setTimeout(function () {
+        chrome.tabs.create({
+          url: 'https://opal.med.umanitoba.ca',
+          selected: (button != 1)
+        });
+      }, 0);
+    }, false);
 }, false);
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+})(window,document,'script','https://www.google-analytics.com/analytics_debug.js','ga');
 
 ga('create', 'UA-47599004-4', 'auto');
+ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+ga('require', 'displayfeatures');
 ga('send', 'pageview');
-

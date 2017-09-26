@@ -105,5 +105,7 @@ function bindTextInputListeners(options) {
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-47599004-4', 'auto');
+ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+ga('require', 'displayfeatures');
 ga('send', 'pageview');
 
