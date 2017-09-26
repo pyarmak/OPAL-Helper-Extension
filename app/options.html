@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- build:css styles/options-vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/materialize/dist/css/materialize.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css styles/main.css -->
+    <!-- build:css styles/options.css -->
+    <link href="styles/main.css" rel="stylesheet">
+    <link href="styles/options.css" rel="stylesheet">
+    <!-- endbuild -->
+  </head>
+  <body>
+  <div class="group">
+    <fieldset class="item">
+      <legend>
+        &nbsp;Order (based on last time visited)&nbsp;
+      </legend>
+      <div><input type="radio" name="Order" id="DESC" value="DESC" /><label for="DESC">Descending</label></div>
+      <div><input type="radio" name="Order" id="ASC" value="ASC" /><label for="ASC">Ascending</label></div>
+    </fieldset>
+    <fieldset class="item">
+      <legend>
+        &nbsp;Maximum number of displayed histories: <span class="count" id="ItemCount_val"></span>&nbsp;
+      </legend>
+      <p class="range-field">
+        <input type="range" id="ItemCount" max="50" min="1" step="1" />
+      </p>
+    </fieldset>
+    <fieldset id="playerField" class="item">
+      <legend>
+        <span class="switch">
+          <label>
+            &nbsp;Custom Video Player&nbsp;
+            <input type="checkbox">
+            <span class="lever"></span>
+          </label>
+        </span>
+      </legend>
+      <input style="width:100%" type="text" id="player" placeholder="e.g. C:\Program Files (x86)\mpv\mpv.exe" />
+      <span id="player-nag" class="nagging-color">You must supply a path to a video player</span>
+    </fieldset>
+    <fieldset id="downloadsFolderField" class="item">
+      <legend>
+        <span class="switch">
+          <label>
+            &nbsp;Custom Download Location
+            <input type="checkbox">
+            <span class="lever"></span>
+          </label>
+        </span>
+      </legend>
+      <input style="width:100%" type="text" id="downloadsFolder" placeholder="e.g. C:\Users\User\Downloads\" />
+      <span id="downloadsFolder-nag" class="nagging-color">You must supply a download path</span>
+    </fieldset>
+  </div>
+  <!-- build:js scripts/options-vendor.js -->
+  <!-- bower:js -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/materialize/dist/js/materialize.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:js scripts/options.js -->
+  <!-- build:js scripts/options_page.js -->
+  <script src="scripts/options.js"></script>
+  <script src="scripts/options_page.js"></script>
+  <!-- endbuild -->
+  </body>
+</html>
