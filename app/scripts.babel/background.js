@@ -4,7 +4,8 @@ const minVer = '0.4.0';
 const websiteUrl = 'https://pyarmak.github.io/OPAL-Helper-Host/';
 
 chrome.runtime.onInstalled.addListener(details => {
-  if (compareVersions(details.previousVersion, minVer) < 0) {
+  const ver = (typeof details.previousVersion === 'number') ? details.previousVersion.toString() : details.previousVersion;
+  if (compareVersions(ver, minVer) < 0) {
     console.log(`Previous version (${details.previousVersion}) does not meet the minimum requirement: ${minVer}`);
     chrome.notifications.create({
       type: 'basic',
