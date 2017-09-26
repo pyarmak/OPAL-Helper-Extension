@@ -2,14 +2,15 @@ function checkOptionExists(option) {
   return option && option.length !== 0;
 }
 
-function updateNag(name, option) {
-  if (checkOptionExists(option)) {
-    document.getElementById(`${name}-nag`).setAttribute('style', 'display: none');
-    document.getElementById(`${name}Field`).setAttribute('class', 'item');
-    document.getElementById(name).value = option;
-  } else {
+function updateNag(name, optionEnabled, optionValue) {
+  console.log(`Name: ${name}\nEnabled: ${optionEnabled}\nValue: ${checkOptionExists(optionValue)}`);
+  if (optionEnabled === true && !checkOptionExists(optionValue)) {
     document.getElementById(`${name}-nag`).setAttribute('style', 'display: block');
     document.getElementById(`${name}Field`).setAttribute('class', 'item nagging-color nagging-border');
+  } else {
+    document.getElementById(`${name}-nag`).setAttribute('style', 'display: none');
+    document.getElementById(`${name}Field`).setAttribute('class', 'item');
+    document.getElementById(name).value = optionValue;
   }
 }
 
@@ -47,11 +48,13 @@ window.addEventListener('load', function (e) {
         options[optionName] = elm.checked;
         Options.save(options);
         updateCustomFields();
+        updateNag('player', options.CustomPlayer, player);
+        updateNag('downloadsFolder', options.CustomDownloadsFolder, folder);
       });
     });
     updateCustomFields();
-    updateNag('player', player);
-    updateNag('downloadsFolder', folder);
+    updateNag('player', options.CustomPlayer, player);
+    updateNag('downloadsFolder', options.CustomDownloadsFolder, folder);
     bindTextInputListeners(options);
   });
 }, false);
@@ -81,7 +84,7 @@ function bindTextInputListeners(options) {
     if (timeout) window.clearTimeout(timeout);
     timeout = window.setTimeout(function () {
       options.Player = e.target.value;
-      updateNag('player', options.Player);
+      updateNag('player', options.CustomPlayer, options.Player);
       Options.save(options);
     }, 1000);
   }, false);
@@ -90,6 +93,7 @@ function bindTextInputListeners(options) {
     if (timeout) window.clearTimeout(timeout);
     timeout = window.setTimeout(function () {
       options.DownloadsFolder = e.target.value;
+      updateNag('downloadsFolder', options.CustomDownloadsFolder, options.DownloadsFolder);
       Options.save('downloadsFolder', options);
     }, 1000);
   }, false)
