@@ -1,6 +1,6 @@
 'use strict';
 
-const minVer = '0.4.0';
+const minVer = '0.4.1';
 const websiteUrl = 'https://pyarmak.github.io/OPAL-Helper-Host/';
 
 chrome.runtime.onInstalled.addListener(details => {
@@ -107,35 +107,43 @@ chrome.runtime.onMessage.addListener((data, sender) => {
     console.log('Starting video download...');
     chrome.cookies.get({url: sender.tab.url, name: 'AUTH_TOKEN'}, (cookie) => {
       const url = `http://opal.med.umanitoba.ca/curriculumExplorer/sessionVideoUrl.mvc?eventId=${getEventId(data.url)}webLinkId=${getWebLinkId(data.url)}format=vlc&token=${cookie.value}&theatre=`;
-      port.postMessage({type: 'download', url: url, dest: data.dest, name: `${getSessionId(data.url)}-lecture-video.mp4`});
-      updateHistory(data.url, getSessionId(data.url), data.title);
-      let notificationId = null;
-      port.onMessage.addListener(function (msg) {
-        if (msg.Error === true) return console.log('ERROR: ' + msg.Message);
-        if (msg.Message !== 'DONE') {
-          chrome.tabs.sendMessage(sender.tab.id, {type: 'download_progress', value: msg.Message});
-          if (notificationId !== null) {
-            chrome.notifications.update(notificationId, {
-              progress: Number(msg.Message)
-            });
+      chrome.storage.local.get('username', (username) => {
+        port.postMessage({
+          type: 'download',
+          url: url,
+          dest: data.dest,
+          name: `${getSessionId(data.url)}-lecture-video.mp4`,
+          username: username
+        });
+        updateHistory(data.url, getSessionId(data.url), data.title);
+        let notificationId = null;
+        port.onMessage.addListener(function (msg) {
+          if (msg.Error === true) return console.log('ERROR: ' + msg.Message);
+          if (msg.Message !== 'DONE') {
+            chrome.tabs.sendMessage(sender.tab.id, {type: 'download_progress', value: msg.Message});
+            if (notificationId !== null) {
+              chrome.notifications.update(notificationId, {
+                progress: Number(msg.Message)
+              });
+            } else {
+              chrome.notifications.create({
+                type: 'progress',
+                iconUrl: 'images/icon-128.png',
+                title: 'Downloading',
+                message: data.title,
+                progress: Number(msg.Message)
+              }, (nid) => notificationId = nid);
+            }
           } else {
+            chrome.tabs.sendMessage(sender.tab.id, {type: 'download_complete', value: url});
             chrome.notifications.create({
-              type: 'progress',
+              type: 'basic',
               iconUrl: 'images/icon-128.png',
-              title: 'Downloading',
-              message: data.title,
-              progress: Number(msg.Message)
-            }, (nid) => notificationId = nid);
+              title: 'Download Complete',
+              message: `Finished downloading ${data.title}`
+            });
           }
-        } else {
-          chrome.tabs.sendMessage(sender.tab.id, {type: 'download_complete', value: url});
-          chrome.notifications.create({
-            type: 'basic',
-            iconUrl: 'images/icon-128.png',
-            title: 'Download Complete',
-            message: `Finished downloading ${data.title}`
-          });
-        }
+        });
       });
     });
   };
@@ -182,12 +190,20 @@ chrome.runtime.onMessage.addListener((data, sender) => {
 //     }, []
 // );
 
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+(function (i, s, o, g, r, a, m) {
+  i['GoogleAnalyticsObject'] = r;
+  i[r] = i[r] || function () {
+    (i[r].q = i[r].q || []).push(arguments)
+  }, i[r].l = 1 * new Date();
+  a = s.createElement(o),
+    m = s.getElementsByTagName(o)[0];
+  a.async = 1;
+  a.src = g;
+  m.parentNode.insertBefore(a, m)
+})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
 ga('create', 'UA-47599004-4', 'auto');
-ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+ga('set', 'checkProtocolTask', function () {
+}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
 ga('require', 'displayfeatures');
 ga('send', 'pageview');
