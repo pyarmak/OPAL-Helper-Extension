@@ -107,13 +107,13 @@ chrome.runtime.onMessage.addListener((data, sender) => {
     console.log('Starting video download...');
     chrome.cookies.get({url: sender.tab.url, name: 'AUTH_TOKEN'}, (cookie) => {
       const url = `http://opal.med.umanitoba.ca/curriculumExplorer/sessionVideoUrl.mvc?eventId=${getEventId(data.url)}webLinkId=${getWebLinkId(data.url)}format=vlc&token=${cookie.value}&theatre=`;
-      chrome.storage.local.get('username', (username) => {
+      chrome.storage.local.get('username', (user) => {
         port.postMessage({
           type: 'download',
           url: url,
           dest: data.dest,
           name: `${getSessionId(data.url)}-lecture-video.mp4`,
-          username: username
+          username: user.username
         });
         updateHistory(data.url, getSessionId(data.url), data.title);
         let notificationId = null;
