@@ -24,19 +24,19 @@ function addVideoButtons() {
   Options.load((options) => {
     for (const tag of aTags) {
       if (tag.innerText.toLowerCase() === searchText) {
-        tag.insertAdjacentHTML('afterend', '&nbsp;<button class="video_download">Download</button>');
-        tag.nextElementSibling.addEventListener('click', (e) => {
-          e.preventDefault();
-          let folder = (options.CustomDownloadsFolder) ? options.DownloadsFolder : 'DEFAULT';
-          chrome.runtime.sendMessage({
-            type: 'video_download',
-            url: tag.href,
-            dest: folder,
-            title: getSessionTitle(),
-            course: getSessionCourse()
-          });
-          createProgressBar(tag.nextElementSibling);
-        });
+        // tag.insertAdjacentHTML('afterend', '&nbsp;<button class="video_download">Download</button>');
+        // tag.nextElementSibling.addEventListener('click', (e) => {
+        //   e.preventDefault();
+        //   let folder = (options.CustomDownloadsFolder) ? options.DownloadsFolder : 'DEFAULT';
+        //   chrome.runtime.sendMessage({
+        //     type: 'video_download',
+        //     url: tag.href,
+        //     dest: folder,
+        //     title: getSessionTitle(),
+        //     course: getSessionCourse()
+        //   });
+        //   createProgressBar(tag.nextElementSibling);
+        // });
         tag.addEventListener('click', (e) => {
           e.preventDefault();
           let player = (options.CustomPlayer) ? options.Player : 'DEFAULT';
