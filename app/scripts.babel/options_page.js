@@ -40,7 +40,7 @@ window.addEventListener('load', function (e) {
         }, false);
       });
     document.querySelectorAll('input[type="checkbox"]').forEach((elm) => {
-      let field = elm.parentNode.parentNode.parentNode.nextSibling.nextSibling;
+      let field = elm.parentNode.parentNode.parentNode.nextSibling;
       let name = field.id.substring(0, 1).toUpperCase() + field.id.substring(1);
       let optionName = `Custom${name}`;
       elm.checked = options[optionName];
@@ -63,12 +63,8 @@ function updateCustomFields() {
   let checkboxes = document.getElementsByClassName('switch');
   for (let box of checkboxes) {
     let enabled = false;
-    for (let field of box.firstChild.nextSibling.childNodes) {
-      if (field.nodeType === Node.ELEMENT_NODE && field.tagName === 'INPUT') {
-        enabled = field.checked;
-      }
-    }
-    let fieldset = box.parentNode.parentNode;
+    enabled = box.firstChild.firstElementChild.checked;
+    let fieldset = box.parentElement.parentElement;
     for (let field of fieldset.childNodes) {
       if (field.nodeType === Node.ELEMENT_NODE && field.tagName === 'INPUT') {
         if (!enabled) field.setAttribute('disabled', '');
