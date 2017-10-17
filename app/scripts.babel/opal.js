@@ -17,7 +17,7 @@ function getSessionCourse() {
   return _getSessionInformation('Course/Program');
 }
 
-function processLecturePage() {
+function addVideoButtons() {
   let aTags = document.getElementsByTagName('a');
   let searchText = 'session video';
 
@@ -51,6 +51,41 @@ function processLecturePage() {
       }
     }
   });
+}
+
+function addResourceDownloadButton() {
+  let labels = document.getElementsByTagName('label');
+  let searchText = 'Learning Resources';
+
+  for (const label of labels) {
+    if (label.innerText === searchText) {
+      let resourceContainer = label.parentElement.parentElement.nextElementSibling.firstElementChild;
+      let buttonContainer = resourceContainer.children[resourceContainer.childElementCount - 2];
+      buttonContainer.insertAdjacentHTML('afterend', '<button id="resource_download">Download All Using OPAL Helper</button>');
+      buttonContainer.nextElementSibling.addEventListener('click', (e) => {
+        e.preventDefault();
+        let resources = [];
+        for (let i = 0; i < resourceContainer.childElementCount - 3; i++) {
+          const resource = resourceContainer.children[i].children[2];
+          resources.push({
+            title: resource.innerText.replace(resource.firstElementChild.innerText, ''),
+            link: resource.href
+          });
+        }
+        chrome.runtime.sendMessage({
+          type: 'resource_download',
+          resources: resources,
+          title: getSessionTitle(),
+          course: getSessionCourse()
+        });
+      });
+    }
+  }
+}
+
+function processLecturePage() {
+  addVideoButtons();
+  addResourceDownloadButton();
 }
 
 function createProgressBar(element) {

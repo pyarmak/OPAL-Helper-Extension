@@ -2,6 +2,7 @@
 
 const minVer = '0.4.1';
 const websiteUrl = 'https://pyarmak.github.io/OPAL-Helper-Host/';
+let resourceMap = [];
 
 chrome.runtime.onInstalled.addListener(details => {
   const ver = (typeof details.previousVersion === 'number') ? details.previousVersion.toString() : details.previousVersion;
@@ -164,6 +165,17 @@ chrome.runtime.onMessage.addListener((data, sender) => {
     });
   };
 
+  const handleResourceDownload = function () {
+    ga('send', 'pageview');
+    ga('send', 'event', 'Resources', 'download', data.course);
+    for (let resource of data.resources) {
+      let name = `OPALhelper/resources/${resource.title}`;
+      chrome.downloads.download({
+        url: resource.link
+      }, (id) => resourceMap[id] = name);
+    }
+  };
+
   switch (data.type) {
     case 'video_download':
       handleVideoDownload();
@@ -174,9 +186,23 @@ chrome.runtime.onMessage.addListener((data, sender) => {
     case 'video_play':
       handleVideoPlay();
       break;
+    case 'resource_download':
+      handleResourceDownload();
+      break;
     default:
       return console.log('OPAL Helper: Got an unknown request type: ' + data.type);
   }
+});
+
+function getFilePathExtension(path) {
+	let filename = path.split('\\').pop().split('/').pop();
+	return filename.substr(( Math.max(0, filename.lastIndexOf('.')) || Infinity) + 1);
+}
+
+chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
+  const ext = getFilePathExtension(downloadItem.finalUrl);
+  const filename = `${resourceMap[downloadItem.id]}.${ext}`;
+  suggest({ filename: filename });
 });
 
 // chrome.webRequest.onCompleted.addListener(
