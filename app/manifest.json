@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.4.0",
+  "version": "0.4.4",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -22,6 +22,7 @@
     "cookies",
     "nativeMessaging",
     "notifications",
+    "downloads",
     "https://opal.med.umanitoba.ca/*"
   ],
   "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
