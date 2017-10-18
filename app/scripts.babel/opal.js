@@ -69,7 +69,8 @@ function addResourceDownloadButton() {
           const resource = resourceContainer.children[i].children[2];
           resources.push({
             title: resource.innerText.replace(resource.firstElementChild.innerText, ''),
-            link: resource.href
+            link: resource.href,
+            course: getSessionCourse()
           });
         }
         chrome.runtime.sendMessage({
