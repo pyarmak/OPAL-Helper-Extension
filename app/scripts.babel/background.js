@@ -200,6 +200,7 @@ function getFilePathExtension(path) {
 }
 
 chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, suggest) {
+  if (downloadItem.byExtensionId !== chrome.runtime.id) return;
   const ext = getFilePathExtension(downloadItem.finalUrl);
   const filename = `${resourceMap[downloadItem.id]}.${ext}`;
   suggest({ filename: filename });
