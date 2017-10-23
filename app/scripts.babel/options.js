@@ -7,7 +7,9 @@ var Options = {
                 CustomPlayer: false,
                 Player: null,
                 CustomDownloadsFolder: false,
-                DownloadsFolder: null
+                DownloadsFolder: null,
+                Convert: false,
+                ExcludeDoc: true
             }
         }, function (items) {
             cb(items.options);

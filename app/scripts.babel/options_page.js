@@ -6,10 +6,10 @@ function updateNag(name, optionEnabled, optionValue) {
   console.log(`Name: ${name}\nEnabled: ${optionEnabled}\nValue: ${checkOptionExists(optionValue)}`);
   if (optionEnabled === true && !checkOptionExists(optionValue)) {
     document.getElementById(`${name}-nag`).setAttribute('style', 'display: block');
-    document.getElementById(`${name}Field`).setAttribute('class', 'item nagging-color nagging-border');
+    document.getElementById(`${name}Field`).setAttribute('class', 'item custom nagging-color nagging-border');
   } else {
     document.getElementById(`${name}-nag`).setAttribute('style', 'display: none');
-    document.getElementById(`${name}Field`).setAttribute('class', 'item');
+    document.getElementById(`${name}Field`).setAttribute('class', 'item custom');
     document.getElementById(name).value = optionValue;
   }
 }
@@ -39,7 +39,7 @@ window.addEventListener('load', function (e) {
           Options.save(options);
         }, false);
       });
-    document.querySelectorAll('input[type="checkbox"]').forEach((elm) => {
+    document.querySelectorAll('fieldset.custom input[type="checkbox"]').forEach((elm) => {
       let field = elm.parentNode.parentNode.parentNode.nextSibling;
       let name = field.id.substring(0, 1).toUpperCase() + field.id.substring(1);
       let optionName = `Custom${name}`;
@@ -56,11 +56,31 @@ window.addEventListener('load', function (e) {
     updateNag('player', options.CustomPlayer, player);
     updateNag('downloadsFolder', options.CustomDownloadsFolder, folder);
     bindTextInputListeners(options);
+    processSessionResources(options);
   });
 }, false);
 
+function processSessionResources(options) {
+  let checkboxes = document.querySelectorAll('#sessionResourceOptions input[type="checkbox"]');
+  chrome.runtime.getPlatformInfo(info => {
+    if (info.os === chrome.runtime.PlatformOs.WIN) {
+      for (let checkbox of checkboxes) {
+        checkbox.checked = options[checkbox.id];
+        checkbox.addEventListener('click', e => {
+          options[checkbox.id] = checkbox.checked;
+          Options.save(options);
+        });
+      }
+    } else {
+      for (let checkbox of checkboxes) {
+        checkbox.setAttribute('disabled', '');
+      }
+    }
+  });
+}
+
 function updateCustomFields() {
-  let checkboxes = document.getElementsByClassName('switch');
+  let checkboxes = document.querySelectorAll('fieldset.custom span.switch');
   for (let box of checkboxes) {
     let enabled = false;
     enabled = box.firstChild.firstElementChild.checked;

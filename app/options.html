@@ -29,7 +29,32 @@
         <input type="range" id="ItemCount" max="50" min="1" step="1" />
       </p>
     </fieldset>
-    <fieldset id="playerField" class="item">
+    <fieldset id="sessionResourceOptions" class="item">
+      <legend>
+        &nbsp;Session Resource Options (Windows Only)&nbsp;
+      </legend>
+      <div class="container">
+        <div class="row">
+          <div class="switch col s8">
+            <label>
+              Convert Downloaded Resources to PDF
+              <input id="Convert" type="checkbox">
+              <span class="lever"></span>
+            </label>
+          </div>
+        </div>
+        <div class="row last">
+          <div class="switch col s8">
+            <label>
+              Don't Convert Word Documents
+              <input id="ExcludeDoc" type="checkbox">
+              <span class="lever"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset id="playerField" class="item custom">
       <legend>
         <span class="switch">
           <label>
@@ -42,7 +67,7 @@
       <input style="width:100%" type="text" id="player" placeholder="e.g. C:\Program Files (x86)\mpv\mpv.exe" />
       <span id="player-nag" class="nagging-color">You must supply a path to a video player</span>
     </fieldset>
-    <fieldset id="downloadsFolderField" class="item">
+    <fieldset id="downloadsFolderField" class="item custom">
       <legend>
         <span class="switch">
           <label>

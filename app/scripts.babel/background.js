@@ -1,8 +1,25 @@
 'use strict';
 
-const minVer = '0.4.0';
+const minVer = '0.5.0';
 const websiteUrl = 'https://pyarmak.github.io/OPAL-Helper-Host/';
 let resourceMap = [];
+
+function getOptions(cb) {
+  chrome.storage.local.get({
+    options: {
+      ItemCount: 10,
+      Order: 'DESC',
+      CustomPlayer: false,
+      Player: null,
+      CustomDownloadsFolder: false,
+      DownloadsFolder: null,
+      Convert: false,
+      ExcludeDoc: true
+    }
+  }, function (items) {
+    cb(items.options);
+  });
+}
 
 chrome.runtime.onInstalled.addListener(details => {
   const ver = (typeof details.previousVersion === 'number') ? details.previousVersion.toString() : details.previousVersion;
@@ -69,7 +86,7 @@ function updateHistory(url, sessionId, title = '') {
 }
 
 chrome.runtime.onMessage.addListener((data, sender) => {
-  const port = chrome.runtime.connectNative('com.opal.helper'); //TODO: version check host application and panic if shit goes wrong
+  window.port = chrome.runtime.connectNative('com.opal.helper'); //TODO: version check host application and panic if shit goes wrong
   port.onDisconnect.addListener(function () {
     console.log('Disconnected from host');
   });
@@ -169,7 +186,7 @@ chrome.runtime.onMessage.addListener((data, sender) => {
     ga('send', 'pageview');
     ga('send', 'event', 'Resources', 'download', data.course);
     for (let resource of data.resources) {
-      let name = `OPALhelper/resources/${resource.course}/${resource.title}`;
+      let name = `OPALhelper/tmp/${resource.course}/${resource.title}`;
       chrome.downloads.download({
         url: resource.link
       }, (id) => resourceMap[id] = name);
@@ -204,6 +221,27 @@ chrome.downloads.onDeterminingFilename.addListener(function (downloadItem, sugge
   const ext = getFilePathExtension(downloadItem.finalUrl);
   const filename = `${resourceMap[downloadItem.id]}.${ext}`;
   suggest({ filename: filename });
+});
+
+chrome.downloads.onChanged.addListener((downloadDelta) => {
+  if (!downloadDelta.state || downloadDelta.state.current !== 'complete') return;
+  chrome.downloads.search({ id: downloadDelta.id }, downloadItems => {
+    let downloadItem = downloadItems[0];
+    if (downloadItem.byExtensionId !== chrome.runtime.id) return;
+    getOptions(function (options) {
+      if (options.Convert) {
+        let ext = getFilePathExtension(downloadItem.filename);
+        if (ext === 'doc' || ext === 'docx') {
+          if (options.ExcludeDoc) return;
+        }
+        port.postMessage({type: 'convert', url: downloadItem.filename});
+        port.onMessage.addListener(function (msg) {
+          if (msg.Error === true) return console.log('ERROR: ' + msg.Message);
+          console.log('Converted: ' + msg.Message);
+        });
+      }
+    });
+  });
 });
 
 // chrome.webRequest.onCompleted.addListener(
