@@ -229,8 +229,8 @@ chrome.downloads.onChanged.addListener((downloadDelta) => {
     let downloadItem = downloadItems[0];
     if (downloadItem.byExtensionId !== chrome.runtime.id) return;
     getOptions(function (options) {
-      if (options.Convert) {
-        let ext = getFilePathExtension(downloadItem.filename);
+      let ext = getFilePathExtension(downloadItem.filename);
+      if (options.Convert && ext !== 'pdf') {
         if (ext === 'doc' || ext === 'docx') {
           if (options.ExcludeDoc) return;
         }
