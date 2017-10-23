@@ -74,3 +74,18 @@ input.url {
 .nagging-border {
     border-color: orange;
 }
+
+#sessionResourceOptions {
+  .container {
+    margin-left: 0;
+  }
+  .row {
+    margin-bottom: 10px;
+  }
+  .lever {
+    float: right;
+  }
+  .last {
+    margin-bottom: 0;
+  }
+}
