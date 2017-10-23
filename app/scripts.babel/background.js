@@ -1,6 +1,6 @@
 'use strict';
 
-const minVer = '0.4.0';
+const minVer = '0.5.0';
 const websiteUrl = 'https://pyarmak.github.io/OPAL-Helper-Host/';
 let resourceMap = [];
 
