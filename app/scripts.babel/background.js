@@ -186,7 +186,7 @@ chrome.runtime.onMessage.addListener((data, sender) => {
     ga('send', 'pageview');
     ga('send', 'event', 'Resources', 'download', data.course);
     for (let resource of data.resources) {
-      let name = `OPALhelper/tmp/${resource.course}/${resource.title}`;
+      let name = `OPALhelper/resources/${resource.course}/${resource.title}`;
       chrome.downloads.download({
         url: resource.link
       }, (id) => resourceMap[id] = name);
