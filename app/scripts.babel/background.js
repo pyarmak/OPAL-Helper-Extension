@@ -185,11 +185,17 @@ chrome.runtime.onMessage.addListener((data, sender) => {
   const handleResourceDownload = function () {
     ga('send', 'pageview');
     ga('send', 'event', 'Resources', 'download', data.course);
+
+    let sleep = (time) => (result) => new Promise(resolve => setTimeout(() => resolve(result), time));
+
     for (let resource of data.resources) {
       let name = `OPALhelper/resources/${resource.course}/${resource.title}`;
       chrome.downloads.download({
         url: resource.link
       }, (id) => resourceMap[id] = name);
+      Promise.resolve(`Downloading ${name}`)
+        .then(sleep(1000))
+        .then(console.info);
     }
   };
 
